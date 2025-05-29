@@ -4,23 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_transporte")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Cliente {
+public abstract class TransporteBase implements Transporte {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
-    private String email;
-    private String senha;
-    private String cpf;
-    private String celular;
-    private String passaporte;
+    private int quantidadeLugares;
+    private String descricao;
 }
-
-
-
