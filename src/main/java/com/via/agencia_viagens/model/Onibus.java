@@ -6,7 +6,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Onibus extends TransporteBase {
+public abstract class Onibus extends TransporteBase {
 
     @Override
     public String getTipo() {

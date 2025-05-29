@@ -6,7 +6,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Aviao extends TransporteBase {
+public abstract  class Aviao extends TransporteBase {
 
     @Override
     public String getTipo() {
