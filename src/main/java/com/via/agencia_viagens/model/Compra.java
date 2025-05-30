@@ -24,12 +24,12 @@ public class Compra {
     // Transporte de ida (obrigatório)
     @ManyToOne
     @JoinColumn(name = "transporte_ida_id")
-    private TransporteBase transporteIda;
+    private Transporte transporteIda;
 
     // Transporte de volta (opcional)
     @ManyToOne
     @JoinColumn(name = "transporte_volta_id")
-    private TransporteBase transporteVolta;
+    private Transporte transporteVolta;
 
     private String dataIda;
     private String dataVolta;

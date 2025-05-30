@@ -1,12 +1,11 @@
 package com.via.agencia_viagens.model;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.*;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public abstract class Onibus extends TransporteBase {
+@DiscriminatorValue("ONIBUS")
+public class Onibus extends Transporte {
 
     @Override
     public String getTipo() {
