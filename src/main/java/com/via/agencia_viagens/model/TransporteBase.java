@@ -9,7 +9,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Transporte {
+public abstract class TransporteBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
