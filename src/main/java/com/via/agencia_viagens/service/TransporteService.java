@@ -1,6 +1,6 @@
 package com.via.agencia_viagens.service;
 
-import com.via.agencia_viagens.model.TransporteBase;
+import com.via.agencia_viagens.model.Transporte;
 import com.via.agencia_viagens.repository.TransporteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ public class TransporteService {
     @Autowired
     private TransporteRepository transporteRepository;
 
-    public TransporteBase salvarTransporte(TransporteBase transporte) {
+    public Transporte salvarTransporte(Transporte transporte) {
         return transporteRepository.save(transporte);
     }
 
-    public List<TransporteBase> listarTodos() {
+    public List<Transporte> listarTodos() {
         return transporteRepository.findAll();
     }
 }

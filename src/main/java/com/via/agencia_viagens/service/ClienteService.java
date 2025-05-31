@@ -12,7 +12,11 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public Cliente salvarCliente(Cliente cliente) {
-        System.out.println(cliente);
         return clienteRepository.save(cliente);
+    }
+
+
+    public Cliente procurarId(Long clienteId) {
+        return clienteRepository.findById(clienteId).get();
     }
 }

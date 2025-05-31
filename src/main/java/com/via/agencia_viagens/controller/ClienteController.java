@@ -20,15 +20,15 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    @PostMapping("/cadastrarr2")
+    @PostMapping("/cadastrar")
     public Cliente cadastrarCliente(@RequestBody Cliente cliente) {
         System.out.println(cliente);
         return clienteService.salvarCliente(cliente);
     }
 
-    @GetMapping("/listar")
-    public List<Cliente> listar() {
-        return clienteRepository.findAll();
+    @GetMapping("/perfil")
+    public Cliente listar(@RequestBody Cliente cliente) {
+        return clienteService.procurarId(cliente.getId());
     }
 }
 
