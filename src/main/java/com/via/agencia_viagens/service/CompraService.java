@@ -54,7 +54,6 @@ public class CompraService {
                 .possuiSeguro(dto.isPossuiSeguro())
                 .build();
 
-        // Preço base
         BigDecimal preco = new BigDecimal("500.00");
 
         if (dto.isPossuiGuia()) {
@@ -66,6 +65,11 @@ public class CompraService {
             compra = new SeguroViagemDecorator(compra).compra;
             preco = preco.add(new BigDecimal("200.00"));
         }
+
+
+        CalculoPrecoStrategy strategy = CalculoPrecoStrategyFactory.criarEstrategia(dto.getDataIda());
+        double precoComAjuste = strategy.calcularPreco(preco.doubleValue());
+        compra.setPreco(BigDecimal.valueOf(precoComAjuste));
 
         compra.setPreco(preco);
         compra.setDescricao(compra.getDescricaoDetalhada());

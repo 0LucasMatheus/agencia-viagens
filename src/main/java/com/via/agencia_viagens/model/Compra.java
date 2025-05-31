@@ -3,6 +3,7 @@ package com.via.agencia_viagens.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @Entity
@@ -28,8 +29,8 @@ public class Compra {
     @JoinColumn(name = "transporte_volta_id")
     private Transporte transporteVolta;
 
-    private String dataIda;
-    private String dataVolta;
+    private LocalDate dataIda;
+    private LocalDate dataVolta;
     private String numeroPassagem;
 
     @Enumerated(EnumType.STRING)
@@ -67,7 +68,7 @@ public class Compra {
 
     public String getDescricaoDetalhada() {
         String desc = this.descricao != null ? this.descricao : "";
-        if (possuiSeguro) desc += " + Seguro Viagem ativado";
+        if (possuiSeguro) desc += " + Seguro Viagem incluso";
         if (possuiGuia) desc += " + Guia Turístico incluso";
         return desc;
     }
