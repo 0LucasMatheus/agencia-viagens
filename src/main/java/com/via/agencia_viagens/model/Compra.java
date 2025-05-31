@@ -3,7 +3,7 @@ package com.via.agencia_viagens.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-import java.util.List;
+
 
 @Entity
 @Data
@@ -16,43 +16,60 @@ public class Compra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relacionamento com Usuario
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Cliente cliente;
 
-    // Transporte de ida (obrigatório)
     @ManyToOne
     @JoinColumn(name = "transporte_ida_id")
     private Transporte transporteIda;
 
-    // Transporte de volta (opcional)
     @ManyToOne
     @JoinColumn(name = "transporte_volta_id")
     private Transporte transporteVolta;
 
     private String dataIda;
     private String dataVolta;
-
     private String numeroPassagem;
 
     @Enumerated(EnumType.STRING)
     private StatusCompra status;
 
     private BigDecimal preco;
-
     private String hospedagem;
-
     private String descricao;
 
 
-    @Transient
-    private List<CompraDecorator> extras;
+    private boolean possuiSeguro;
+    private boolean possuiGuia;
 
     public enum StatusCompra {
         CONCLUIDA,
         CANCELADA,
         AGUARDANDO_PAGAMENTO
+    }
+
+    public String contatoGuia() {
+        if (possuiGuia) {
+            return "contato do Guia Turístico enviado para: " + this.cliente.getEmail();
+        } else {
+            return "Não possui Guia Turístico.";
+        }
+    }
+
+    public void cancelarSeSeguroAtivo() {
+        if (possuiSeguro) {
+            this.status = StatusCompra.CANCELADA;
+        } else {
+            throw new IllegalStateException("Compra não possui seguro para permitir cancelamento especial.");
+        }
+    }
+
+    public String getDescricaoDetalhada() {
+        String desc = this.descricao != null ? this.descricao : "";
+        if (possuiSeguro) desc += " + Seguro Viagem ativado";
+        if (possuiGuia) desc += " + Guia Turístico incluso";
+        return desc;
     }
 }
 

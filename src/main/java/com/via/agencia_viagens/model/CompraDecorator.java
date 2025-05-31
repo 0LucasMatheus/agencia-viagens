@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public abstract class CompraDecorator {
 
-    protected Compra compra;
+    public Compra compra;
 
     public CompraDecorator(Compra compra) {
         this.compra = compra;
@@ -14,7 +14,4 @@ public abstract class CompraDecorator {
 
     public abstract String getDescricaoFinal();
 
-    public Compra getCompraOriginal() {
-        return compra;
-    }
 }

@@ -15,8 +15,8 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-
     public Cliente procurarId(Long clienteId) {
         return clienteRepository.findById(clienteId).get();
     }
+
 }
