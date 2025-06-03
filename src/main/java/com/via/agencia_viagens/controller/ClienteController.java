@@ -22,7 +22,6 @@ public class ClienteController {
 
     @PostMapping("/cadastrar")
     public Cliente cadastrarCliente(@RequestBody Cliente cliente) {
-        System.out.println(cliente);
         return clienteService.salvarCliente(cliente);
     }
 

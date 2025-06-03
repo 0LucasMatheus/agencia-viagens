@@ -1,94 +1,74 @@
 package com.via.agencia_viagens.service;
 
 import com.via.agencia_viagens.model.*;
-import com.via.agencia_viagens.model.DTO.CompraDTO;
-import com.via.agencia_viagens.repository.ClienteRepository;
-import com.via.agencia_viagens.repository.CompraRepository;
-import com.via.agencia_viagens.repository.TransporteRepository;
+import com.via.agencia_viagens.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CompraService {
 
-    @Autowired
-    private TransporteRepository transporteRepository;
+    private final CompraRepository compraRepository;
+    private final TransporteRepository transporteRepository;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
-
-    @Autowired
-    private CompraRepository compraRepository;
-
-    public void executarCommand(Long compraId, CompraCommand command) {
-        Compra compra = buscarPorId(compraId);
-        command.executar();
-        compraRepository.save(compra);
+    public CompraService(CompraRepository compraRepository,
+                         TransporteRepository transporteRepository,
+                         ClienteRepository clienteRepository) {
+        this.compraRepository = compraRepository;
+        this.transporteRepository = transporteRepository;
+        this.clienteRepository = clienteRepository;
     }
 
-    public Compra criarCompraViaDTO(CompraDTO dto) {
-        Transporte ida = transporteRepository.findById(dto.getTransporteIdaId())
+    public List<Transporte> listarTodosTransportes() {
+        return transporteRepository.findAll();
+    }
+
+    public Compra criarCompra(Long clienteId, Long transporteIdaId, Long transporteVoltaId,
+                              LocalDate dataIda, LocalDate dataVolta,
+                              String hospedagem, boolean possuiSeguro, boolean possuiGuia) {
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        Transporte transporteIda = transporteRepository.findById(transporteIdaId)
                 .orElseThrow(() -> new RuntimeException("Transporte de ida não encontrado"));
-        if (ida.getQuantidadeLugares() <= 0) throw new RuntimeException("Sem lugares disponíveis para ida");
 
-        Transporte volta = null;
-        if (dto.getTransporteVoltaId() != null) {
-            volta = transporteRepository.findById(dto.getTransporteVoltaId())
-                    .orElseThrow(() -> new RuntimeException("Transporte de volta não encontrado"));
-            if (volta.getQuantidadeLugares() <= 0) throw new RuntimeException("Sem lugares disponíveis para volta");
-        }
+        Transporte transporteVolta = transporteVoltaId != null ?
+                transporteRepository.findById(transporteVoltaId)
+                        .orElseThrow(() -> new RuntimeException("Transporte de volta não encontrado")) :
+                null;
 
-        Compra compra = Compra.builder()
-                .cliente(clienteRepository.findById(dto.getClienteId()).orElseThrow())
-                .transporteIda(ida)
-                .transporteVolta(volta)
-                .dataIda(dto.getDataIda())
-                .dataVolta(dto.getDataVolta())
-                .numeroPassagem(dto.getNumeroPassagem())
-                .status(Compra.StatusCompra.AGUARDANDO_PAGAMENTO)
-                .hospedagem(dto.getHospedagem())
-                .descricao("Passagem de ida" + (volta != null ? " e volta" : ""))
-                .possuiGuia(dto.isPossuiGuia())
-                .possuiSeguro(dto.isPossuiSeguro())
-                .build();
+        Compra compra = new Compra();
+        compra.setCliente(cliente);
+        compra.setTransporteIda(transporteIda);
+        compra.setTransporteVolta(transporteVolta);
+        compra.setDataIda(dataIda);
+        compra.setDataVolta(dataVolta);
+        compra.setStatus(Compra.StatusCompra.AGUARDANDO_PAGAMENTO);
+        compra.setHospedagem(hospedagem);
+        compra.setPossuiSeguro(possuiSeguro);
+        compra.setPossuiGuia(possuiGuia);
 
-        BigDecimal preco = new BigDecimal("500.00");
-
-        if (dto.isPossuiGuia()) {
-            compra = new GuiaTuristicoDecorator(compra, "GUIA-123").compra;
-            preco = preco.add(new BigDecimal("150.00"));
-        }
-
-        if (dto.isPossuiSeguro()) {
-            compra = new SeguroViagemDecorator(compra).compra;
-            preco = preco.add(new BigDecimal("200.00"));
-        }
-
-
-        CalculoPrecoStrategy strategy = CalculoPrecoStrategyFactory.criarEstrategia(dto.getDataIda());
-        double precoComAjuste = strategy.calcularPreco(preco.doubleValue());
-        compra.setPreco(BigDecimal.valueOf(precoComAjuste));
-
+        // Cálculo básico do preço (pode ser aprimorado)
+        BigDecimal preco = BigDecimal.valueOf(500.00);
+        if (possuiGuia) preco = preco.add(BigDecimal.valueOf(150.00));
+        if (possuiSeguro) preco = preco.add(BigDecimal.valueOf(200.00));
         compra.setPreco(preco);
+
         compra.setDescricao(compra.getDescricaoDetalhada());
 
-        // Salva a compra
-        Compra salva = compraRepository.save(compra);
-
-        // Reduz a quantidade de lugares
-        ida.setQuantidadeLugares(ida.getQuantidadeLugares() - 1);
-        transporteRepository.save(ida);
-
-        if (volta != null) {
-            volta.setQuantidadeLugares(volta.getQuantidadeLugares() - 1);
-            transporteRepository.save(volta);
-        }
-
-        return salva;
+        return compraRepository.save(compra);
     }
 
+    public List<Compra> listarComprasPorCliente(Long clienteId) {
+        return compraRepository.findByClienteId(clienteId);
+    }
 
     public Compra buscarPorId(Long id) {
         return compraRepository.findById(id).orElse(null);
