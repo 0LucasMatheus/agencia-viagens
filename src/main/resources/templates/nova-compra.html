@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Compra - Agência de Viagens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .section-title {
+            margin-bottom: 1rem;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Nova Compra de Viagem</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/compra-view/nova}" method="post">
+                        <input type="hidden" name="clienteId" th:value="${cliente.id}">
+
+                        <div class="form-section">
+                            <h4 class="section-title">1. Escolha seu Destino</h4>
+                            <div class="mb-3">
+                                <label for="hospedagem" class="form-label">Local de Hospedagem</label>
+                                <input type="text" class="form-control" id="hospedagem" name="hospedagem" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4 class="section-title">2. Transporte de Ida</h4>
+                            <div class="mb-3">
+                                <label for="transporteIda" class="form-label">Selecione o transporte</label>
+                                <select class="form-select" id="transporteIda" name="transporteIda" required>
+                                    <option value="">Selecione...</option>
+                                    <option th:each="transporte : ${transportes}"
+                                            th:value="${transporte.id}"
+                                            th:text="${transporte.descricao + ' (' + transporte.getTipo() + ')'}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataIda" class="form-label">Data de Ida</label>
+                                <input type="date" class="form-control" id="dataIda" name="dataIda" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4 class="section-title">3. Transporte de Volta (Opcional)</h4>
+                            <div class="mb-3">
+                                <label for="transporteVolta" class="form-label">Selecione o transporte</label>
+                                <select class="form-select" id="transporteVolta" name="transporteVolta">
+                                    <option value="">Selecione...</option>
+                                    <option th:each="transporte : ${transportes}"
+                                            th:value="${transporte.id}"
+                                            th:text="${transporte.descricao + ' (' + transporte.getTipo() + ')'}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataVolta" class="form-label">Data de Volta</label>
+                                <input type="date" class="form-control" id="dataVolta" name="dataVolta">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4 class="section-title">4. Serviços Adicionais</h4>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="possuiSeguro" name="possuiSeguro">
+                                <label class="form-check-label" for="possuiSeguro">
+                                    Seguro Viagem (+ R$ 200,00)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="possuiGuia" name="possuiGuia">
+                                <label class="form-check-label" for="possuiGuia">
+                                    Guia Turístico (+ R$ 150,00)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Finalizar Compra</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Validação simples para datas
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const dataIda = document.getElementById('dataIda').value;
+        const dataVolta = document.getElementById('dataVolta').value;
+        const transporteVolta = document.getElementById('transporteVolta').value;
+
+        if (transporteVolta && !dataVolta) {
+            e.preventDefault();
+            alert('Por favor, informe a data de volta quando selecionar transporte de volta.');
+        }
+
+        if (dataVolta && new Date(dataVolta) < new Date(dataIda)) {
+            e.preventDefault();
+            alert('A data de volta não pode ser anterior à data de ida.');
+        }
+    });
+</script>
+</body>
+</html>
