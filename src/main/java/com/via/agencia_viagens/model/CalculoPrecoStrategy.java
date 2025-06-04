@@ -1,6 +1,8 @@
 package com.via.agencia_viagens.model;
 
+import java.math.BigDecimal;
+
 public interface CalculoPrecoStrategy {
-    double calcularPreco(double precoBase);
+    BigDecimal calcularPreco(BigDecimal precoBase);
 }
 

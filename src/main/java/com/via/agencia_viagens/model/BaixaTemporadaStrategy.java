@@ -1,8 +1,12 @@
 package com.via.agencia_viagens.model;
 
+import java.math.BigDecimal;
+
 public class BaixaTemporadaStrategy implements CalculoPrecoStrategy {
+    private static final BigDecimal TAXA = new BigDecimal("0.8");
+
     @Override
-    public double calcularPreco(double precoBase) {
-        return precoBase * 0.8;
+    public BigDecimal calcularPreco(BigDecimal precoBase) {
+        return precoBase.multiply(TAXA);
     }
 }

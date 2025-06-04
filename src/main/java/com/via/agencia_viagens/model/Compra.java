@@ -41,36 +41,38 @@ public class Compra {
     private String descricao;
 
 
-    private boolean possuiSeguro;
-    private boolean possuiGuia;
+    //private boolean possuiSeguro; mudando a forma de implemntar os decorators
+    //private boolean possuiGuia;
 
+    private String numeroGuia; // null se não tiver guia
+    private Boolean seguroAtivo; // null se não tiver seguro
+
+    public boolean possuiGuia() {
+        return numeroGuia != null;
+    }
+
+    public boolean possuiSeguro() {
+        return seguroAtivo != null && seguroAtivo;
+    }
+
+    public String contatoGuia() {
+        return possuiGuia() ?
+                "Contato do Guia Turístico (" + numeroGuia + ") enviado para: " + this.cliente.getEmail() :
+                "Não possui Guia Turístico.";
+    }
+
+    public String getDescricaoDetalhada() {
+        StringBuilder desc = new StringBuilder();
+        if (descricao != null) desc.append(descricao);
+        if (possuiSeguro()) desc.append(" + Seguro Viagem");
+        if (possuiGuia()) desc.append(" + Guia Turístico");
+        return desc.toString();
+    }
     public enum StatusCompra {
         CONCLUIDA,
         CANCELADA,
         AGUARDANDO_PAGAMENTO
     }
 
-    public String contatoGuia() {
-        if (possuiGuia) {
-            return "contato do Guia Turístico enviado para: " + this.cliente.getEmail();
-        } else {
-            return "Não possui Guia Turístico.";
-        }
-    }
-
-    public void cancelarSeSeguroAtivo() {
-        if (possuiSeguro) {
-            this.status = StatusCompra.CANCELADA;
-        } else {
-            throw new IllegalStateException("Compra não possui seguro para permitir cancelamento especial.");
-        }
-    }
-
-    public String getDescricaoDetalhada() {
-        String desc = this.descricao != null ? this.descricao : "";
-        if (possuiSeguro) desc += " + Seguro Viagem incluso";
-        if (possuiGuia) desc += " + Guia Turístico incluso";
-        return desc;
-    }
 }
 

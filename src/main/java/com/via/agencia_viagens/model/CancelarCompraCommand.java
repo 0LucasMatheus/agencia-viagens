@@ -1,6 +1,5 @@
 package com.via.agencia_viagens.model;
 
-// Comando para Cancelar Compra
 public class CancelarCompraCommand implements CompraCommand {
     private Compra compra;
 
@@ -10,6 +9,11 @@ public class CancelarCompraCommand implements CompraCommand {
 
     @Override
     public void executar() {
-        compra.setStatus(Compra.StatusCompra.CANCELADA);
+        if (compra.possuiSeguro()) {
+            compra.setStatus(Compra.StatusCompra.CANCELADA);
+            compra.setSeguroAtivo(false); // Desativa o seguro ao cancelar
+        } else {
+            throw new IllegalStateException("Compra não possui seguro para cancelamento especial");
+        }
     }
 }
