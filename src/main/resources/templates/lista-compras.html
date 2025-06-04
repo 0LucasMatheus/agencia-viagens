@@ -5,20 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minhas Compras - Agência de Viagens</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .status-badge {
+      font-size: 0.9rem;
+      padding: 0.5rem 0.8rem;
+    }
+    .action-buttons .btn {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container mt-5">
-  <h2 class="mb-4">Minhas Compras</h2>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Minhas Compras</h2>
+    <a th:href="@{/compra-view/nova}" class="btn btn-success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+      Nova Compra
+    </a>
+  </div>
+
+  <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
+  <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+  <div th:if="${info}" class="alert alert-info" th:text="${info}"></div>
 
   <div class="card shadow">
     <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
+      <div th:if="${compras.empty}" class="text-center py-5">
+        <h4 class="text-muted">Você ainda não fez nenhuma compra</h4>
+        <p class="text-muted">Comece agora mesmo planejando sua próxima viagem!</p>
+        <a th:href="@{/compra-view/nova}" class="btn btn-primary mt-3">Criar Nova Compra</a>
+      </div>
+
+      <div th:unless="${compras.empty}" class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
           <tr>
-            <th>Número</th>
+            <th>ID</th>
             <th>Destino</th>
             <th>Data</th>
             <th>Status</th>
@@ -28,27 +57,33 @@
           </thead>
           <tbody>
           <tr th:each="compra : ${compras}">
-            <td th:text="${compra.numeroPassagem} ?: 'N/A'"></td>
+            <td th:text="${compra.id}"></td>
             <td th:text="${compra.hospedagem}"></td>
             <td th:text="${#temporals.format(compra.dataIda, 'dd/MM/yyyy')}"></td>
             <td>
-                                    <span class="badge"
+                                    <span class="badge status-badge"
                                           th:classappend="${compra.status.name() == 'CONCLUIDA'} ? 'bg-success' :
                                                          ${compra.status.name() == 'CANCELADA'} ? 'bg-danger' : 'bg-warning'"
                                           th:text="${compra.status}">
                                     </span>
             </td>
-            <td th:text="'R$ ' + ${#numbers.formatDecimal(compra.preco, 1, 2, 'POINT')}"></td>
-            <td>
-              <a th:href="@{/compra-view/detalhes/__${compra.id}__}" class="btn btn-sm btn-primary">Detalhes</a>
+            <td th:text="'R$ ' + ${#numbers.formatDecimal(compra.preco, 1, 2, 'COMMA')}"></td>
+            <td class="action-buttons">
+              <a th:href="@{/compra-view/detalhes/{id}(id=${compra.id})}"
+                 class="btn btn-sm btn-outline-primary">Detalhes</a>
+              <a th:if="${compra.status.name() == 'AGUARDANDO_PAGAMENTO'}"
+                 th:href="@{/compra-view/confirmar/{id}(id=${compra.id})}"
+                 class="btn btn-sm btn-success">Confirmar</a>
+              <a th:if="${compra.status.name() == 'AGUARDANDO_PAGAMENTO'}"
+                 th:href="@{/compra-view/cancelar/{id}(id=${compra.id})}"
+                 class="btn btn-sm btn-danger">Cancelar</a>
+              <a th:if="${compra.possuiGuia()}"
+                 th:href="@{/compra-view/contato-guia/{id}(id=${compra.id})}"
+                 class="btn btn-sm btn-info">Contato Guia</a>
             </td>
           </tr>
           </tbody>
         </table>
-      </div>
-
-      <div class="d-grid gap-2 mt-3">
-        <a th:href="@{/compra-view/nova}" class="btn btn-success">Nova Compra</a>
       </div>
     </div>
   </div>

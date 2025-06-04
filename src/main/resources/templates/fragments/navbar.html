@@ -10,15 +10,33 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Início</a>
+                </li>
+                <li class="nav-item" th:if="${session.clienteLogado != null}">
                     <a class="nav-link" th:href="@{/compra-view/nova}">Nova Compra</a>
                 </li>
+                <li class="nav-item" th:if="${session.clienteLogado != null}">
+                    <a class="nav-link" th:href="@{/compra-view/minhas-compras}">Minhas Compras</a>
+                </li>
+                <!-- Link para admin transportes (sempre visível) -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/transportes}">Admin Transportes</a>
+                </li>
             </ul>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" th:if="${session.clienteLogado != null}">
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/cliente-view/perfil}">Meu Perfil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/cliente-view/logout}">Sair</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" th:if="${session.clienteLogado == null}">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/cliente-view/login}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/cliente-view/cadastro}">Cadastrar</a>
                 </li>
             </ul>
         </div>

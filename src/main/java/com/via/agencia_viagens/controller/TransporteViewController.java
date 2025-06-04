@@ -25,7 +25,6 @@ public class TransporteViewController {
 
     @GetMapping("/novo")
     public String mostrarFormularioNovoTransporte(Model model) {
-        model.addAttribute("tiposTransporte", new String[]{"Ônibus", "Avião"});
         model.addAttribute("transporte", new Transporte() {
             @Override
             public String getTipo() {

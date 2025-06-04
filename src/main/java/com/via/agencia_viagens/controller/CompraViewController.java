@@ -7,29 +7,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/compra-view")
 public class CompraViewController {
 
     private final CompraService compraService;
-    private final ClienteService clienteService;
 
-    public CompraViewController(CompraService compraService, ClienteService clienteService) {
+    public CompraViewController(CompraService compraService) {
         this.compraService = compraService;
-        this.clienteService = clienteService;
     }
 
     @GetMapping("/nova")
-    public String mostrarFormularioCompra(Model model, Principal principal) {
-        Cliente cliente = clienteService.buscarPorEmail(principal.getName());
+    public String mostrarFormularioCompra(Model model, HttpSession session) {
+        Cliente clienteLogado = (Cliente) session.getAttribute("clienteLogado");
+        if (clienteLogado == null) {
+            return "redirect:/cliente-view/login";
+        }
 
         model.addAttribute("compra", new Compra());
         model.addAttribute("transportes", compraService.listarTodosTransportes());
         model.addAttribute("hospedagens", List.of("Hotel Standard", "Hotel Premium", "Resort", "Pousada"));
-        model.addAttribute("clienteId", cliente.getId());
+        model.addAttribute("clienteId", clienteLogado.getId());
         return "nova-compra";
     }
 
@@ -54,9 +56,14 @@ public class CompraViewController {
     }
 
     @GetMapping("/minhas-compras")
-    public String listarComprasCliente(Principal principal, Model model) {
-        Cliente cliente = clienteService.buscarPorEmail(principal.getName());
-        model.addAttribute("compras", compraService.listarComprasPorCliente(cliente.getId()));
+    public String listarComprasCliente(HttpSession session, Model model) {
+        Cliente clienteLogado = (Cliente) session.getAttribute("clienteLogado");
+        if (clienteLogado == null) {
+            return "redirect:/cliente-view/login";
+        }
+
+        List<Compra> compras = compraService.listarComprasPorCliente(clienteLogado.getId());
+        model.addAttribute("compras", compras);
         return "lista-compras";
     }
 

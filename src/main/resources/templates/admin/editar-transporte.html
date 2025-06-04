@@ -9,7 +9,7 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-5">
+<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="card shadow">
@@ -37,9 +37,9 @@
                                    th:field="*{quantidadeLugares}" min="1" required>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Atualizar</button>
-                            <a th:href="@{/admin/transportes}" class="btn btn-secondary">Cancelar</a>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Atualizar Transporte</button>
+                            <a th:href="@{/admin/transportes}" class="btn btn-outline-secondary">Cancelar</a>
                         </div>
                     </form>
                 </div>

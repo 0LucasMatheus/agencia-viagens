@@ -2,7 +2,6 @@ package com.via.agencia_viagens.service;
 
 import com.via.agencia_viagens.model.*;
 import com.via.agencia_viagens.repository.TransporteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +11,6 @@ public class TransporteService {
 
     private final TransporteRepository transporteRepository;
 
-    @Autowired
     public TransporteService(TransporteRepository transporteRepository) {
         this.transporteRepository = transporteRepository;
     }
