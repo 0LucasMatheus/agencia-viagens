@@ -67,14 +67,14 @@ public class CompraViewController {
         return "lista-compras";
     }
 
-    @PostMapping("/confirmar/{id}")
+    @GetMapping("/confirmar/{id}")
     public String confirmarCompra(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         compraService.confirmarCompra(id);
         redirectAttributes.addFlashAttribute("sucesso", "Compra confirmada com sucesso!");
         return "redirect:/compra-view/minhas-compras";
     }
 
-    @PostMapping("/cancelar/{id}")
+    @GetMapping("/cancelar/{id}")
     public String cancelarCompra(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             compraService.cancelarCompra(id);

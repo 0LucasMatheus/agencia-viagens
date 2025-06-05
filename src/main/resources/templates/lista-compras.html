@@ -55,22 +55,23 @@
             <th>Ações</th>
           </tr>
           </thead>
+
           <tbody>
           <tr th:each="compra : ${compras}">
             <td th:text="${compra.id}"></td>
             <td th:text="${compra.hospedagem}"></td>
             <td th:text="${#temporals.format(compra.dataIda, 'dd/MM/yyyy')}"></td>
             <td>
-                                    <span class="badge status-badge"
-                                          th:classappend="${compra.status.name() == 'CONCLUIDA'} ? 'bg-success' :
-                                                         ${compra.status.name() == 'CANCELADA'} ? 'bg-danger' : 'bg-warning'"
-                                          th:text="${compra.status}">
-                                    </span>
+    <span class="badge status-badge"
+          th:classappend="${compra.status.name() == 'CONCLUIDA' ? 'bg-success' : (compra.status.name() == 'CANCELADA' ? 'bg-danger' : 'bg-warning')}"
+          th:text="${compra.status}">
+    </span>
             </td>
             <td th:text="'R$ ' + ${#numbers.formatDecimal(compra.preco, 1, 2, 'COMMA')}"></td>
             <td class="action-buttons">
-              <a th:href="@{/compra-view/detalhes/{id}(id=${compra.id})}"
-                 class="btn btn-sm btn-outline-primary">Detalhes</a>
+              <div th:if="${compra.descricao != null}" th:text="${compra.descricao}"></div>
+              <div th:if="${compra.descricao == null}" class="text-muted fst-italic">Sem extras</div>
+
               <a th:if="${compra.status.name() == 'AGUARDANDO_PAGAMENTO'}"
                  th:href="@{/compra-view/confirmar/{id}(id=${compra.id})}"
                  class="btn btn-sm btn-success">Confirmar</a>
@@ -83,6 +84,7 @@
             </td>
           </tr>
           </tbody>
+
         </table>
       </div>
     </div>

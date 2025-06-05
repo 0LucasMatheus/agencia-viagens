@@ -40,9 +40,9 @@
             <div class="card shadow profile-card">
                 <div class="profile-header">
                     <div class="profile-pic">
-                        <span th:text="${cliente.nome.substring(0,1) + cliente.sobrenome.substring(0,1)}"></span>
+                        <span th:text="${cliente.nome.substring(0,1)}"></span>
                     </div>
-                    <h3 th:text="${cliente.nome + ' ' + cliente.sobrenome}"></h3>
+                    <h3 th:text="${cliente.nome}"></h3>
                     <p class="mb-0" th:text="${cliente.email}"></p>
                 </div>
 
@@ -64,7 +64,7 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>Nome Completo</span>
-                                    <span th:text="${cliente.nome + ' ' + cliente.sobrenome}"></span>
+                                    <span th:text="${cliente.nome}"></span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>Email</span>
@@ -79,25 +79,6 @@
                                     <span th:text="${cliente.celular}"></span>
                                 </li>
                             </ul>
-                        </div>
-
-                        <div class="col-md-6">
-                            <h5>Atividades Recentes</h5>
-                            <div class="card">
-                                <div class="card-body">
-                                    <p class="card-text">Total de Compras: <strong th:text="${compras != null ? compras.size() : 0}"></strong></p>
-                                    <p class="card-text">Última compra:
-                                        <span th:if="${compras != null and !compras.empty}">
-                                                <span th:text="${#temporals.format(compras[0].dataIda, 'dd/MM/yyyy')}"></span> -
-                                                <span th:text="${compras[0].hospedagem}"></span>
-                                            </span>
-                                        <span th:unless="${compras != null and !compras.empty}">Nenhuma compra recente</span>
-                                    </p>
-                                    <a th:href="@{/compra-view/minhas-compras}" class="btn btn-sm btn-outline-primary mt-2">
-                                        Ver todas as compras
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

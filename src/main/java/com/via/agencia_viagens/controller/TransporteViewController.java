@@ -63,14 +63,28 @@ public class TransporteViewController {
     @PostMapping("/editar/{id}")
     public String atualizarTransporte(
             @PathVariable Long id,
-            @ModelAttribute Transporte transporte,
+            @RequestParam String tipo,
+            @RequestParam String descricao,
+            @RequestParam int quantidadeLugares,
             RedirectAttributes redirectAttributes) {
 
+        Transporte transporte;
+        if (tipo.equals("Ônibus")) {
+            transporte = new Onibus();
+        } else {
+            transporte = new Aviao();
+        }
+
         transporte.setId(id);
+        transporte.setDescricao(descricao);
+        transporte.setQuantidadeLugares(quantidadeLugares);
+
         transporteService.salvarTransporte(transporte);
+
         redirectAttributes.addFlashAttribute("sucesso", "Transporte atualizado com sucesso!");
         return "redirect:/admin/transportes";
     }
+
 
     @GetMapping("/deletar/{id}")
     public String deletarTransporte(@PathVariable Long id, RedirectAttributes redirectAttributes) {
