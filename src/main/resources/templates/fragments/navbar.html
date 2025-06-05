@@ -12,17 +12,17 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/}">Início</a>
                     </li>
-                    <li class="nav-item" th:if="${#httpSession.getAttribute('clienteLogado') != null}">
+                    <li class="nav-item" th:if="${clienteLogado != null}">
                         <a class="nav-link" th:href="@{/compra-view/nova}">Nova Compra</a>
                     </li>
-                    <li class="nav-item" th:if="${#httpSession.getAttribute('clienteLogado') != null}">
+                    <li class="nav-item" th:if="${clienteLogado != null}">
                         <a class="nav-link" th:href="@{/compra-view/minhas-compras}">Minhas Compras</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/admin/transportes}">Admin Transportes</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav" th:if="${#httpSession.getAttribute('clienteLogado') != null}">
+                <ul class="navbar-nav" th:if="${clienteLogado != null}">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/cliente-view/perfil}">Meu Perfil</a>
                     </li>
@@ -30,7 +30,7 @@
                         <a class="nav-link" th:href="@{/cliente-view/logout}">Sair</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav" th:if="${#httpSession.getAttribute('clienteLogado') == null}">
+                <ul class="navbar-nav" th:if="${clienteLogado == null}">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/cliente-view/login}">Login</a>
                     </li>
