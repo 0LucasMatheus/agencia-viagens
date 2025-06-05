@@ -45,11 +45,16 @@ public class CompraViewController {
             @RequestParam String hospedagem,
             @RequestParam(required = false, defaultValue = "false") boolean possuiSeguro,
             @RequestParam(required = false, defaultValue = "false") boolean possuiGuia,
+            @RequestParam String tipoViagem,
+            @RequestParam(required = false) String destinoNacional,
+            @RequestParam(required = false) String destinoInternacional,
+
             RedirectAttributes redirectAttributes) {
 
-        Compra compra = compraService.criarCompra(
-                clienteId, transporteIda, transporteVolta,
-                dataIda, dataVolta, hospedagem, possuiSeguro, possuiGuia);
+        Compra compra = compraService.criarCompra(clienteId, transporteIda, transporteVolta, dataIda, dataVolta,
+                hospedagem, possuiSeguro, possuiGuia,
+                destinoNacional, destinoInternacional);
+
 
         redirectAttributes.addFlashAttribute("sucesso", "Compra realizada com sucesso!");
         return "redirect:/compra-view/minhas-compras";

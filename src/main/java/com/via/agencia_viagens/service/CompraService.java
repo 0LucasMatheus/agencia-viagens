@@ -31,7 +31,9 @@ public class CompraService {
 
     public Compra criarCompra(Long clienteId, Long transporteIdaId, Long transporteVoltaId,
                               LocalDate dataIda, LocalDate dataVolta,
-                              String hospedagem, boolean possuiSeguro, boolean possuiGuia) {
+                              String hospedagem, boolean possuiSeguro, boolean possuiGuia,
+                              String destinoNacional, String destinoInternacional)
+    {
 
         Cliente cliente = clienteService.procurarId(clienteId);
         Transporte transporteIda = transporteRepository.findById(transporteIdaId)
@@ -67,6 +69,18 @@ public class CompraService {
         }
 
         compra.setPreco(preco);
+
+        StringBuilder descricao = new StringBuilder();
+
+        if (destinoNacional != null && !destinoNacional.isBlank()) {
+            descricao.append("Destino Nacional: ").append(destinoNacional);
+        } else if (destinoInternacional != null && !destinoInternacional.isBlank()) {
+            descricao.append("Destino Internacional: ").append(destinoInternacional);
+        }
+
+        compra.setDescricao(descricao.toString()); // descrição parcial, o restante vem com seguro/guia
+
+
         compra.setDescricao(compra.getDescricaoDetalhada());
 
         return compraRepository.save(compra);

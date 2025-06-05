@@ -35,9 +35,46 @@
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">Nova Compra de Viagem</h3>
                 </div>
+
                 <div class="card-body">
                     <form th:action="@{/compra-view/nova}" method="post">
                         <input type="hidden" name="clienteId" th:value="${clienteId}">
+
+                        <div class="form-section">
+                            <h4 class="section-title">0. Tipo de Viagem</h4>
+
+                            <div class="mb-3">
+                                <label for="tipoViagem" class="form-label">Viagem Nacional ou Internacional?</label>
+                                <select class="form-select" id="tipoViagem" name="tipoViagem" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Nacional">Nacional</option>
+                                    <option value="Internacional">Internacional</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="destinosNacionais" style="display: none;">
+                                <label for="destinoNacional" class="form-label">Destino no Brasil</label>
+                                <select class="form-select" id="destinoNacional" name="destinoNacional">
+                                    <option value="">Selecione...</option>
+                                    <option value="Rio de Janeiro">Rio de Janeiro</option>
+                                    <option value="Foz do Iguaçu">Foz do Iguaçu</option>
+                                    <option value="Bonito">Bonito</option>
+                                    <option value="Lençóis Maranhenses">Lençóis Maranhenses</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="destinosInternacionais" style="display: none;">
+                                <label for="destinoInternacional" class="form-label">Destino Internacional</label>
+                                <select class="form-select" id="destinoInternacional" name="destinoInternacional">
+                                    <option value="">Selecione...</option>
+                                    <option value="Paris">Paris</option>
+                                    <option value="Londres">Londres</option>
+                                    <option value="Tóquio">Tóquio</option>
+                                    <option value="Nova York">Nova York</option>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <div class="form-section">
                             <h4 class="section-title">1. Escolha seu Destino</h4>
@@ -137,5 +174,47 @@
         }
     });
 </script>
+
+<script>
+    const tipoViagem = document.getElementById("tipoViagem");
+    const destinosNacionais = document.getElementById("destinosNacionais");
+    const destinosInternacionais = document.getElementById("destinosInternacionais");
+    const transporteIda = document.getElementById("transporteIda");
+    const transporteVolta = document.getElementById("transporteVolta");
+
+    const todosTransportes = Array.from(transporteIda.options).slice(1); // Ignora o primeiro 'Selecione...'
+
+    tipoViagem.addEventListener("change", function () {
+        destinosNacionais.style.display = "none";
+        destinosInternacionais.style.display = "none";
+
+        if (this.value === "Nacional") {
+            destinosNacionais.style.display = "block";
+        } else if (this.value === "Internacional") {
+            destinosInternacionais.style.display = "block";
+        }
+
+        transporteIda.innerHTML = '<option value="">Selecione...</option>';
+        transporteVolta.innerHTML = '<option value="">Selecione...</option>';
+
+        todosTransportes.forEach(opt => {
+            const tipoTexto = opt.textContent.toLowerCase();
+            let tipo = "";
+
+            if (tipoTexto.includes("ônibus")) {
+                tipo = "Nacional";
+            } else if (tipoTexto.includes("avião")) {
+                tipo = "Internacional";
+            }
+
+            if (tipo === tipoViagem.value) {
+                transporteIda.appendChild(opt.cloneNode(true));
+                transporteVolta.appendChild(opt.cloneNode(true));
+            }
+        });
+    });
+
+</script>
+
 </body>
 </html>
