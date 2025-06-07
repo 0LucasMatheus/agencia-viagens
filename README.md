@@ -18,7 +18,7 @@ Aplicação web desenvolvida para facilitar a compra de pacotes de viagem com tr
 
 **Backend:**
 
-- Java 21
+- Java 23
 - Spring Boot
 - Spring Data JPA
 - Banco de Dados: MySQL
@@ -118,7 +118,7 @@ public Compra criarCompra(...dados...) {
 
 **Requisitos:**
 
-- JDK 21
+- JDK 23
 - Maven
 - MySQL (ou outro compatível)
 
